@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英雪的工作空间</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        :root {
+            /* 浅色主题变量 - 蓝色系 */
+            --bg-primary: #f5f9ff;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --accent: #4a89dc;
+            --accent-light: #5d9cec;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.95);
+            --glass-shadow: rgba(74, 137, 220, 0.15);
+            --icon-bg: rgba(255, 255, 255, 0.8);
+            --icon-hover: rgba(255, 255, 255, 0.95);
+            --card-hover: rgba(255, 255, 255, 0.9);
+            --theme-indicator: "浅色模式";
+            --glass-edge-light: rgba(255, 255, 255, 0.8);
+        }
+        
+        .dark-theme {
+            /* 深色主题变量 - 蓝色系 */
+            --bg-primary: #0f1621;
+            --bg-secondary: #1a2232;
+            --text-primary: #e0e6f0;
+            --text-secondary: #8a96b0;
+            --accent: #4a89dc;
+            --accent-light: #5d9cec;
+            --glass-bg: rgba(26, 34, 50, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: rgba(0, 0, 0, 0.3);
+            --icon-bg: rgba(40, 50, 70, 0.8);
+            --icon-hover: rgba(60, 75, 100, 0.95);
+            --card-hover: rgba(50, 65, 90, 0.9);
+            --theme-indicator: "深色模式";
+            --glass-edge-light: rgba(255, 255, 255, 0.15);
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #6a8cff, #4a89dc, #3b7dd8, #2a6fd6);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            min-height: 100vh;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.5s ease;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* 欢迎界面样式 */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1), transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            opacity: 1;
+        }
+        
+        .welcome-screen.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+        
+        .welcome-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+        }
+        
+        .snowflake {
+            font-size: 60px;
+            margin-bottom: 30px;
+            color: var(--accent);
+            animation: floatSnow 3s ease-in-out infinite;
+        }
+        
+        @keyframes floatSnow {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        .welcome-title {
+            font-size: 42px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent), #3b7dd8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .welcome-message {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            width: 300px;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        /* 主内容容器 */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1) 0.3s, 
+                        transform 1.2s cubic-bezier(0.19, 1, 0.22, 1) 0.3s;
+        }
+        
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 标题栏 - 增强液态玻璃效果 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 40px var(--glass-shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--glass-edge-light);
+            border-left: 1px solid var(--glass-edge-light);
+        }
+        
+        /* 液态玻璃边缘高光效果 - 增强 */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light) 20%, 
+                          rgba(255,255,255,0.7) 50%, 
+                          var(--glass-edge-light) 80%, 
+                          transparent);
+            filter: blur(5px);
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light) 20%, 
+                          rgba(255,255,255,0.3) 50%, 
+                          var(--glass-edge-light) 80%, 
+                          transparent);
+            filter: blur(3px);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 0 20px rgba(74, 137, 220, 0.6);
+            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 液态玻璃图标高光 */
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, 
+                        rgba(255,255,255,0.8) 0%, 
+                        transparent 70%);
+            transform: rotate(30deg);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 137, 220, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(74, 137, 220, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 137, 220, 0); }
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+            text-shadow: 0 2px 10px rgba(74, 137, 220, 0.3);
+        }
+        
+        .theme-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .theme-indicator {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .theme-indicator::before {
+            content: var(--theme-indicator);
+        }
+        
+        .theme-toggle {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            width: 50px;
+            height: 26px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            padding: 0 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light), 
+                          transparent);
+        }
+        
+        .toggle-circle {
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .toggle-circle::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, 
+                        rgba(255,255,255,0.6) 0%, 
+                        transparent 70%);
+            transform: rotate(30deg);
+        }
+        
+        .dark-theme .toggle-circle {
+            transform: translateX(24px);
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        /* 增强液态玻璃卡片 */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px var(--glass-shadow);
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--glass-edge-light);
+            border-left: 1px solid var(--glass-edge-light);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px var(--glass-shadow);
+            background: var(--card-hover);
+        }
+        
+        /* 液态玻璃边缘高光 - 增强 */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light) 20%, 
+                          rgba(255,255,255,0.7) 50%, 
+                          var(--glass-edge-light) 80%, 
+                          transparent);
+            filter: blur(5px);
+        }
+        
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light) 20%, 
+                          rgba(255,255,255,0.3) 50%, 
+                          var(--glass-edge-light) 80%, 
+                          transparent);
+            filter: blur(3px);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+        }
+        
+        .card-title i {
+            background: rgba(74, 137, 220, 0.2);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(74, 137, 220, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-title i::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, 
+                        rgba(255,255,255,0.5) 0%, 
+                        transparent 70%);
+            transform: rotate(30deg);
+        }
+        
+        /* 快速启动区域 */
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: var(--icon-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--glass-edge-light);
+            border-left: 1px solid var(--glass-edge-light);
+        }
+        
+        .app-icon:hover {
+            transform: translateY(-5px);
+            background: var(--icon-hover);
+            box-shadow: 0 15px 40px var(--glass-shadow);
+        }
+        
+        .app-icon:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        
+        /* 液态玻璃边缘高光 */
+        .app-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light) 20%, 
+                          rgba(255,255,255,0.5) 50%, 
+                          var(--glass-edge-light) 80%, 
+                          transparent);
+            filter: blur(3px);
+        }
+        
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 液态玻璃图标高光效果 - 增强 */
+        .icon-circle::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, 
+                        rgba(255,255,255,0.7) 0%, 
+                        transparent 60%);
+            transform: rotate(30deg);
+            filter: blur(5px);
+        }
+        
+        /* 应用图标颜色 */
+        .app-icon:nth-child(1) .icon-circle { background: linear-gradient(135deg, #24a0ed, #0d8ddb); } /* VS Code */
+        .app-icon:nth-child(2) .icon-circle { background: linear-gradient(135deg, #333, #000); } /* GitHub */
+        .app-icon:nth-child(3) .icon-circle { background: linear-gradient(135deg, #d90000, #b80000); } /* CSDN */
+        .app-icon:nth-child(4) .icon-circle { background: linear-gradient(135deg, #000, #333); } /* Unity */
+        .app-icon:nth-child(5) .icon-circle { background: linear-gradient(135deg, #0d8ddb, #0066b8); } /* Docker */
+        .app-icon:nth-child(6) .icon-circle { background: linear-gradient(135deg, #0078d7, #005a9e); } /* Terminal */
+        .app-icon:nth-child(7) .icon-circle { background: linear-gradient(135deg, #1b2838, #2a475e); } /* Steam */
+        .app-icon:nth-child(8) .icon-circle { background: linear-gradient(135deg, #6c42bd, #4b2e9e); } /* DeepSeek */
+        
+        .app-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        /* 项目列表 */
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light), 
+                          transparent);
+        }
+        
+        .project-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+        
+        .project-item i {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(74, 137, 220, 0.2);
+            border-radius: 10px;
+            color: var(--accent);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(74, 137, 220, 0.3);
+        }
+        
+        .project-details {
+            flex: 1;
+        }
+        
+        .project-details span {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .project-details small {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* 终端样式 */
+        .terminal {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            font-family: 'SF Mono', monospace;
+            color: #00ff41;
+            height: 200px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+        
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        
+        .terminal-line {
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+        }
+        
+        .terminal-line::before {
+            content: '> ';
+            color: var(--accent-light);
+        }
+        
+        /* 光标样式 */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #00ff41;
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .quick-access-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .quick-access-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .theme-container {
+                justify-content: center;
+            }
+            
+            .welcome-title {
+                font-size: 32px;
+            }
+            
+            .welcome-message {
+                font-size: 20px;
+            }
+            
+            /* 日历响应式调整 */
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
+            }
+            
+            .calendar-day {
+                padding: 8px 0;
+            }
+            
+            .lunar-date {
+                font-size: 0.6rem;
+            }
+            
+            .festival-tag {
+                font-size: 0.65rem;
+                padding: 2px 6px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quick-access-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-title {
+                font-size: 28px;
+            }
+            
+            .welcome-message {
+                font-size: 18px;
+            }
+            
+            /* 日历响应式调整 */
+            .calendar-grid {
+                gap: 3px;
+            }
+            
+            .calendar-day {
+                padding: 6px 0;
+                font-size: 0.9rem;
+            }
+            
+            .lunar-date {
+                display: none;
+            }
+        }
+        
+        /* 时间和万年历卡片 */
+        .calendar-card {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* 时间显示区域 */
+        .time-display {
+            width: 100%;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        #current-time {
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #5d9cec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 15px rgba(74, 137, 220, 0.3);
+        }
+        
+        #current-date {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        #lunar-date {
+            font-size: 1.1rem;
+            color: var(--accent-light);
+            background: rgba(74, 137, 220, 0.15);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+        }
+        
+        /* 日历容器 */
+        .calendar-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px var(--glass-shadow);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .calendar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--icon-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+        
+        .calendar-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .calendar-day-name {
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 1rem;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: 12px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            font-weight: 500;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .calendar-day:hover {
+            background: rgba(74, 137, 220, 0.2);
+        }
+        
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+        
+        .calendar-day.today {
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(74, 137, 220, 0.4);
+        }
+        
+        .calendar-day.event::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff6b6b;
+        }
+        
+        /* 农历显示 */
+        .lunar-date {
+            font-size: 0.7rem;
+            display: block;
+            margin-top: 3px;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+        
+        /* 节日标签 */
+        .festival-tag {
+            display: block;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+            width: 100%;
+        }
+        
+        /* 装饰元素 */
+        .floating-element {
+            position: fixed;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .floating-1 {
+            width: 300px;
+            height: 300px;
+            background: #6a8cff;
+            top: 10%;
+            left: 5%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-2 {
+            width: 250px;
+            height: 250px;
+            background: #4a89dc;
+            bottom: 10%;
+            right: 5%;
+            animation: float 12s ease-in-out infinite reverse;
+        }
+        
+        .floating-3 {
+            width: 200px;
+            height: 200px;
+            background: #3b7dd8;
+            top: 40%;
+            right: 15%;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(30px, 30px); }
+            50% { transform: translate(0, 60px); }
+            75% { transform: translate(-30px, 30px); }
+            100% { transform: translate(0, 0); }
+        }
+        
+        /* 液态玻璃按钮 */
+        .glass-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                          transparent, 
+                          var(--glass-edge-light), 
+                          transparent);
+        }
+        
+        /* 性能监控卡片 */
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .perf-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        
+        .perf-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .perf-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .perf-unit {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .perf-progress {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        
+        .perf-bar {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .cpu-bar { background: linear-gradient(90deg, #4a89dc, #5d9cec); }
+        .mem-bar { background: linear-gradient(90deg, #ff9a9e, #fad0c4); }
+        .fps-bar { background: linear-gradient(90deg, #1dd1a1, #00d2d3); }
+    </style>
+</head>
+<body>
+    <!-- 欢迎屏幕 -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-content">
+            <div class="snowflake">
+                <i class="fas fa-snowflake"></i>
+            </div>
+            <h1 class="welcome-title" id="welcomeTitle">欢迎使用</h1>
+            <p class="welcome-message" id="welcomeMessage">正在加载您的个人工作空间...</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="floating-element floating-1"></div>
+    <div class="floating-element floating-2"></div>
+    <div class="floating-element floating-3"></div>
+    
+    <div class="container" id="mainContainer">
+        <!-- 顶部标题栏 -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-snowflake"></i>
+                </div>
+                <div class="logo-text">Hi, <span>英雪</span></div>
+            </div>
+            
+            <div class="theme-container">
+                <div class="theme-indicator"></div>
+                <div class="theme-toggle" id="themeToggle">
+                    <div class="toggle-circle"></div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 时间与万年历卡片 -->
+        <div class="card calendar-card">
+            <div class="time-display">
+                <div id="current-time">00:00:00</div>
+                <div id="current-date">2023年1月1日 星期一</div>
+                <div id="lunar-date">农历癸卯年 腊月十五</div>
+            </div>
+            
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <div class="calendar-btn" id="prev-year">
+                            <i class="fas fa-angle-double-left"></i>
+                        </div>
+                        <div class="calendar-btn" id="prev-month">
+                            <i class="fas fa-angle-left"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-title" id="calendar-title">2023年12月</div>
+                    
+                    <div class="calendar-nav">
+                        <div class="calendar-btn" id="next-month">
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                        <div class="calendar-btn" id="next-year">
+                            <i class="fas fa-angle-double-right"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="calendar-day-name">日</div>
+                    <div class="calendar-day-name">一</div>
+                    <div class="calendar-day-name">二</div>
+                    <div class="calendar-day-name">三</div>
+                    <div class="calendar-day-name">四</div>
+                    <div class="calendar-day-name">五</div>
+                    <div class="calendar-day-name">六</div>
+                    
+                    <!-- 日历内容将通过JS动态生成 -->
+                    <div id="calendar-days"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- 快速启动卡片 -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-rocket"></i>
+                    快速启动
+                </h2>
+                <div class="quick-access-grid">
+                    <div class="app-icon" onclick="launchApp('vscode')">
+                        <div class="icon-circle">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <span class="app-name">VS Code</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('github')">
+                        <div class="icon-circle">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <span class="app-name">GitHub</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('csdn')">
+                        <div class="icon-circle">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <span class="app-name">CSDN</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('unity')">
+                        <div class="icon-circle">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <span class="app-name">Unity</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('docker')">
+                        <div class="icon-circle">
+                            <i class="fab fa-docker"></i>
+                        </div>
+                        <span class="app-name">Docker</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('terminal')">
+                        <div class="icon-circle">
+                            <i class="fas fa-terminal"></i>
+                        </div>
+                        <span class="app-name">终端</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('steam')">
+                        <div class="icon-circle">
+                            <i class="fab fa-steam"></i>
+                        </div>
+                        <span class="app-name">Steam</span>
+                    </div>
+                    
+                    <div class="app-icon" onclick="launchApp('deepseek')">
+                        <div class="icon-circle">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <span class="app-name">DeepSeek</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 最近项目卡片 -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-folder"></i>
+                    最近项目
+                </h2>
+                <div class="project-list">
+                    <div class="project-item">
+                        <i class="fab fa-js"></i>
+                        <div class="project-details">
+                            <span>WebGL 渲染引擎</span>
+                            <small>更新于 2 小时前</small>
+                        </div>
+                    </div>
+                    <div class="project-item">
+                        <i class="fab fa-python"></i>
+                        <div class="project-details">
+                            <span>AI 数据分析平台</span>
+                            <small>更新于 昨天</small>
+                        </div>
+                    </div>
+                    <div class="project-item">
+                        <i class="fab fa-unity"></i>
+                        <div class="project-details">
+                            <span>3D 冒险游戏</span>
+                            <small>更新于 3 天前</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 终端卡片 -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-terminal"></i>
+                    开发终端
+                </h2>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot dot-red"></div>
+                        <div class="terminal-dot dot-yellow"></div>
+                        <div class="terminal-dot dot-green"></div>
+                    </div>
+                    <div id="terminal-content">
+                        <div class="terminal-line">git push origin main</div>
+                        <div class="terminal-line">npm run build</div>
+                        <div class="terminal-line">Compilation completed successfully</div>
+                        <div class="terminal-line">Starting development server...</div>
+                        <div class="terminal-line">Server running at http://localhost:3000</div>
+                        <div class="terminal-line">> <span class="cursor"></span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 性能监控卡片 -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    系统性能监控
+                </h2>
+                <div class="performance-stats">
+                    <div class="perf-card">
+                        <div class="perf-title">
+                            <i class="fas fa-microchip"></i>
+                            CPU使用率
+                        </div>
+                        <div class="perf-value" id="cpuUsage">0%</div>
+                        <div class="perf-progress">
+                            <div class="perf-bar cpu-bar" id="cpuBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="perf-card">
+                        <div class="perf-title">
+                            <i class="fas fa-memory"></i>
+                            内存使用
+                        </div>
+                        <div class="perf-value" id="memoryUsage">0 MB</div>
+                        <div class="perf-unit">/ 4096 MB</div>
+                        <div class="perf-progress">
+                            <div class="perf-bar mem-bar" id="memBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="perf-card">
+                        <div class="perf-title">
+                            <i class="fas fa-tachometer-alt"></i>
+                            页面FPS
+                        </div>
+                        <div class="perf-value" id="fpsCounter">0</div>
+                        <div class="perf-unit">FPS</div>
+                        <div class="perf-progress">
+                            <div class="perf-bar fps-bar" id="fpsBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 欢迎词数组
+        const welcomeMessages = [
+            "欢迎回来，英雪！准备开始创造吧！",
+            "很高兴再次见到您，英雪！让我们开始工作吧！",
+            "您的创意空间已就绪，英雪！",
+            "准备好将想法变为现实了吗，英雪？",
+            "欢迎使用您的工作空间，英雪！",
+            "英雪，您的专属开发环境已启动！",
+            "让我们开始今天的创意之旅吧，英雪！",
+            "欢迎回来，英雪！一切准备就绪！",
+            "您的个人工作空间已加载完成，英雪！",
+            "英雪，今天有什么新创意要探索吗？"
+        ];
+        
+        // 农历数据（简化版）
+        const lunarInfo = {
+            "2025-01-01": { lunar: "腊月初二", festival: "元旦" },
+            "2025-01-29": { lunar: "腊月三十", festival: "除夕" },
+            "2025-01-30": { lunar: "正月初一", festival: "春节" },
+            "2025-02-14": { lunar: "正月十七", festival: "情人节" },
+            "2025-03-08": { lunar: "二月初九", festival: "妇女节" },
+            "2025-05-01": { lunar: "四月初四", festival: "劳动节" },
+            "2025-06-01": { lunar: "五月初六", festival: "儿童节" },
+            "2025-09-10": { lunar: "七月十八", festival: "教师节" },
+            "2025-10-01": { lunar: "八月初十", festival: "国庆节" },
+            "2025-12-25": { lunar: "冬月初五", festival: "圣诞节" },
+            "2025-12-31": { lunar: "冬月十一", festival: "跨年夜" }
+        };
+        
+        // 随机选择欢迎词
+        function getRandomWelcome() {
+            const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
+            return welcomeMessages[randomIndex];
+        }
+        
+        // 设置欢迎屏幕
+        function setupWelcomeScreen() {
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const progressFill = document.getElementById('progressFill');
+            const mainContainer = document.getElementById('mainContainer');
+            
+            // 设置欢迎词
+            welcomeMessage.textContent = getRandomWelcome();
+            
+            // 填充进度条
+            progressFill.style.width = '100%';
+            
+            // 3秒后隐藏欢迎屏幕并显示主内容
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                mainContainer.classList.add('visible');
+                
+                // 启动时间和日历
+                startClock();
+                generateCalendar();
+            }, 3000);
+        }
+        
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储的主题设置
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            
+            // 保存主题设置
+            const isDark = body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            // 更新背景渐变
+            updateBackground();
+        });
+        
+        // 应用启动功能
+        function launchApp(app) {
+            // 添加点击动画效果
+            const clickedIcon = event.currentTarget;
+            clickedIcon.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                clickedIcon.style.transform = '';
+            }, 200);
+            
+            // 应用链接定义
+            const appLinks = {
+                'vscode': 'vscode://',
+                'github': 'https://github.com',
+                'csdn': 'https://www.csdn.net',
+                'unity': 'https://unity.com',
+                'docker': 'https://www.docker.com',
+                'steam': 'https://store.steampowered.com',
+                'deepseek': 'https://www.deepseek.com',
+                'terminal': '#' // 终端应用通常是本地的
+            };
+            
+            // 实际应用中应打开对应链接
+            if (appLinks[app] && app !== 'terminal') {
+                window.open(appLinks[app], '_blank');
+            } else if (app === 'terminal') {
+                alert('正在打开系统终端...');
+            }
+        }
+        
+        // 更新背景渐变
+        function updateBackground() {
+            const isDark = body.classList.contains('dark-theme');
+            if (isDark) {
+                document.body.style.background = 'linear-gradient(-45deg, #0f1621, #1a2232, #2a3b5a, #3b4d7a)';
+            } else {
+                document.body.style.background = 'linear-gradient(-45deg, #6a8cff, #4a89dc, #3b7dd8, #2a6fd6)';
+            }
+            document.body.style.backgroundSize = '400% 400%';
+        }
+        
+        // 初始背景设置
+        updateBackground();
+        
+        // 性能监控功能
+        // FPS计数器
+        let fps = 0;
+        let lastCalledTime;
+        let frameCount = 0;
+        let startTime = Date.now();
+        
+        function updateFPS() {
+            frameCount++;
+            const now = Date.now();
+            if (lastCalledTime) {
+                const delta = (now - lastCalledTime) / 1000;
+                fps = Math.floor(frameCount / delta);
+                frameCount = 0;
+            }
+            lastCalledTime = now;
+            
+            document.getElementById('fpsCounter').textContent = fps;
+            const fpsBar = document.getElementById('fpsBar');
+            const fpsPercentage = Math.min(100, (fps / 60) * 100);
+            fpsBar.style.width = `${fpsPercentage}%`;
+            
+            requestAnimationFrame(updateFPS);
+        }
+        
+        // 模拟CPU和内存使用率
+        function updatePerformanceStats() {
+            // 模拟CPU使用率 (0-100%)
+            const cpuUsage = Math.min(100, Math.floor(Math.random() * 40) + 20);
+            document.getElementById('cpuUsage').textContent = `${cpuUsage}%`;
+            document.getElementById('cpuBar').style.width = `${cpuUsage}%`;
+            
+            // 模拟内存使用 (1024-3072 MB)
+            const memUsage = Math.floor(Math.random() * 2048) + 1024;
+            document.getElementById('memoryUsage').textContent = `${memUsage} MB`;
+            const memPercentage = Math.min(100, (memUsage / 4096) * 100);
+            document.getElementById('memBar').style.width = `${memPercentage}%`;
+            
+            // 每秒更新一次
+            setTimeout(updatePerformanceStats, 1000);
+        }
+        
+        // 时间和日历功能
+        let currentDate = new Date();
+        
+        // 实时时钟
+        function startClock() {
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+        
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // 更新日期
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const dateStr = now.toLocaleDateString('zh-CN', options);
+            document.getElementById('current-date').textContent = dateStr;
+            
+            // 更新农历（简化）
+            const dateKey = now.toISOString().split('T')[0];
+            const lunarData = lunarInfo[dateKey] || { lunar: "未知" };
+            document.getElementById('lunar-date').textContent = `农历 ${lunarData.lunar}`;
+        }
+        
+        // 生成日历
+        function generateCalendar(date = currentDate) {
+            const calendarTitle = document.getElementById('calendar-title');
+            const calendarDays = document.getElementById('calendar-days');
+            
+            // 设置标题
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            calendarTitle.textContent = `${year}年${month + 1}月`;
+            
+            // 获取当月第一天和最后一天
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // 获取第一天是星期几（0为周日）
+            const firstDayOfWeek = firstDay.getDay();
+            
+            // 获取上个月最后一天
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            
+            // 清空日历
+            calendarDays.innerHTML = '';
+            
+            // 添加上个月的日期
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.textContent = prevMonthLastDay - i;
+                calendarDays.appendChild(day);
+            }
+            
+            // 添加当月日期
+            const today = new Date();
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                
+                // 检查是否是今天
+                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    day.classList.add('today');
+                }
+                
+                // 创建日期数字
+                const dayNum = document.createElement('div');
+                dayNum.textContent = i;
+                day.appendChild(dayNum);
+                
+                // 检查是否有事件
+                const dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                const lunarData = lunarInfo[dateKey];
+                
+                if (lunarData) {
+                    // 添加农历信息
+                    const lunarSpan = document.createElement('div');
+                    lunarSpan.className = 'lunar-date';
+                    lunarSpan.textContent = lunarData.lunar;
+                    day.appendChild(lunarSpan);
+                    
+                    // 添加节日标签
+                    if (lunarData.festival) {
+                        const festivalSpan = document.createElement('div');
+                        festivalSpan.className = 'festival-tag';
+                        festivalSpan.textContent = lunarData.festival;
+                        day.appendChild(festivalSpan);
+                    }
+                    
+                    // 添加事件标记
+                    day.classList.add('event');
+                }
+                
+                calendarDays.appendChild(day);
+            }
+            
+            // 添加下个月的日期
+            const totalCells = 42; // 6行*7列
+            const daysInMonth = lastDay.getDate();
+            const nextMonthDays = totalCells - firstDayOfWeek - daysInMonth;
+            
+            for (let i = 1; i <= nextMonthDays; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.textContent = i;
+                calendarDays.appendChild(day);
+            }
+        }
+        
+        // 日历导航
+        document.getElementById('prev-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar();
+        });
+        
+        document.getElementById('next-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar();
+        });
+        
+        document.getElementById('prev-year').addEventListener('click', () => {
+            currentDate.setFullYear(currentDate.getFullYear() - 1);
+            generateCalendar();
+        });
+        
+        document.getElementById('next-year').addEventListener('click', () => {
+            currentDate.setFullYear(currentDate.getFullYear() + 1);
+            generateCalendar();
+        });
+        
+        // 启动性能监控
+        updateFPS();
+        updatePerformanceStats();
+        
+        // 页面加载完成后设置欢迎屏幕
+        window.addEventListener('load', () => {
+            setupWelcomeScreen();
+        });
+    </script>
+</body>
+</html>
