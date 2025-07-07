@@ -1121,13 +1121,13 @@
                 'unity': 'https://unity.com',
                 'docker': 'https://www.docker.com',
                 'steam': 'https://store.steampowered.com',
-                'deepseek': 'https://www.deepseek.com',
-                'terminal': 'cmd://' // 终端应用通常是本地的
+                'deepseek': 'https://chat.deepseek.com',
+                'terminal': 'http://www.bing.com' // 终端应用通常是本地的
             };
             
             // 实际应用中应打开对应链接
             if (appLinks[app] && app !== 'terminal') {
-                window.open(appLinks[app], '_blank');
+                window.open(appLinks[app], 'http://www.bing.com');
             } else if (app === 'terminal') {
                 alert('正在打开系统终端...');
             }
