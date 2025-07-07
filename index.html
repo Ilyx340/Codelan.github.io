@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英雪的工作空间</title>
+    <title>小颖的工作空间</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -445,9 +445,9 @@
         
         /* 快速启动区域 */
         .quick-access-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+             display: grid;
+             grid-template-columns: repeat(2, 1fr); /* 改为3列布局 */
+             gap: 20px;
         }
         
         .app-icon {
@@ -670,11 +670,7 @@
         }
         
         /* 响应式设计 */
-        @media (max-width: 992px) {
-            .quick-access-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+
         
         @media (max-width: 768px) {
             .quick-access-grid {
@@ -748,7 +744,7 @@
         }
         
         /* 时间和万年历卡片 */
-        .calendar-card {
+        .date-display-card {
             grid-column: 1 / -1;
             text-align: center;
             padding: 30px;
@@ -792,135 +788,6 @@
             padding: 5px 15px;
             border-radius: 30px;
             margin-bottom: 25px;
-        }
-        
-        /* 日历容器 */
-        .calendar-container {
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 30px var(--glass-shadow);
-        }
-        
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
-        
-        .calendar-nav {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .calendar-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--icon-bg);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
-        }
-        
-        .calendar-btn:hover {
-            background: var(--accent);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .calendar-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-        
-        .calendar-day-name {
-            text-align: center;
-            padding: 12px 0;
-            font-weight: 600;
-            color: var(--accent);
-            font-size: 1rem;
-        }
-        
-        .calendar-day {
-            text-align: center;
-            padding: 12px 0;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            font-weight: 500;
-            min-height: 70px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .calendar-day:hover {
-            background: rgba(74, 137, 220, 0.2);
-        }
-        
-        .calendar-day.other-month {
-            color: var(--text-secondary);
-            opacity: 0.6;
-        }
-        
-        .calendar-day.today {
-            background: var(--accent);
-            color: white;
-            font-weight: 700;
-            box-shadow: 0 5px 15px rgba(74, 137, 220, 0.4);
-        }
-        
-        .calendar-day.event::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ff6b6b;
-        }
-        
-        /* 农历显示 */
-        .lunar-date {
-            font-size: 0.7rem;
-            display: block;
-            margin-top: 3px;
-            color: var(--text-secondary);
-            opacity: 0.8;
-        }
-        
-        /* 节日标签 */
-        .festival-tag {
-            display: block;
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-            color: white;
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            margin-top: 5px;
-            width: 100%;
         }
         
         /* 装饰元素 */
@@ -1004,61 +871,6 @@
                           var(--glass-edge-light), 
                           transparent);
         }
-        
-        /* 性能监控卡片 */
-        .performance-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .perf-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 20px;
-            border: 1px solid var(--glass-border);
-            text-align: center;
-        }
-        
-        .perf-title {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .perf-value {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        
-        .perf-unit {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .perf-progress {
-            height: 8px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-        
-        .perf-bar {
-            height: 100%;
-            border-radius: 4px;
-        }
-        
-        .cpu-bar { background: linear-gradient(90deg, #4a89dc, #5d9cec); }
-        .mem-bar { background: linear-gradient(90deg, #ff9a9e, #fad0c4); }
-        .fps-bar { background: linear-gradient(90deg, #1dd1a1, #00d2d3); }
     </style>
 </head>
 <body>
@@ -1087,7 +899,7 @@
                 <div class="logo-icon">
                     <i class="fas fa-snowflake"></i>
                 </div>
-                <div class="logo-text">Hi, <span>英雪</span></div>
+                <div class="logo-text">Hi, <span>小颖</span></div>
             </div>
             
             <div class="theme-container">
@@ -1098,49 +910,12 @@
             </div>
         </header>
         
-        <!-- 时间与万年历卡片 -->
-        <div class="card calendar-card">
+        <!-- 日期显示卡片 -->
+        <div class="card date-display-card">
             <div class="time-display">
                 <div id="current-time">00:00:00</div>
-                <div id="current-date">2023年1月1日 星期一</div>
-                <div id="lunar-date">农历癸卯年 腊月十五</div>
-            </div>
-            
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <div class="calendar-nav">
-                        <div class="calendar-btn" id="prev-year">
-                            <i class="fas fa-angle-double-left"></i>
-                        </div>
-                        <div class="calendar-btn" id="prev-month">
-                            <i class="fas fa-angle-left"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="calendar-title" id="calendar-title">2023年12月</div>
-                    
-                    <div class="calendar-nav">
-                        <div class="calendar-btn" id="next-month">
-                            <i class="fas fa-angle-right"></i>
-                        </div>
-                        <div class="calendar-btn" id="next-year">
-                            <i class="fas fa-angle-double-right"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="calendar-grid">
-                    <div class="calendar-day-name">日</div>
-                    <div class="calendar-day-name">一</div>
-                    <div class="calendar-day-name">二</div>
-                    <div class="calendar-day-name">三</div>
-                    <div class="calendar-day-name">四</div>
-                    <div class="calendar-day-name">五</div>
-                    <div class="calendar-day-name">六</div>
-                    
-                    <!-- 日历内容将通过JS动态生成 -->
-                    <div id="calendar-days"></div>
-                </div>
+                <div id="current-date">2025年7月7日 星期一</div>
+                <div id="lunar-date">农历乙巳年 六月初三</div>
             </div>
         </div>
         
@@ -1263,82 +1038,23 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- 性能监控卡片 -->
-            <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-chart-line"></i>
-                    系统性能监控
-                </h2>
-                <div class="performance-stats">
-                    <div class="perf-card">
-                        <div class="perf-title">
-                            <i class="fas fa-microchip"></i>
-                            CPU使用率
-                        </div>
-                        <div class="perf-value" id="cpuUsage">0%</div>
-                        <div class="perf-progress">
-                            <div class="perf-bar cpu-bar" id="cpuBar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="perf-card">
-                        <div class="perf-title">
-                            <i class="fas fa-memory"></i>
-                            内存使用
-                        </div>
-                        <div class="perf-value" id="memoryUsage">0 MB</div>
-                        <div class="perf-unit">/ 4096 MB</div>
-                        <div class="perf-progress">
-                            <div class="perf-bar mem-bar" id="memBar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="perf-card">
-                        <div class="perf-title">
-                            <i class="fas fa-tachometer-alt"></i>
-                            页面FPS
-                        </div>
-                        <div class="perf-value" id="fpsCounter">0</div>
-                        <div class="perf-unit">FPS</div>
-                        <div class="perf-progress">
-                            <div class="perf-bar fps-bar" id="fpsBar" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
         // 欢迎词数组
         const welcomeMessages = [
-            "欢迎回来，英雪！准备开始创造吧！",
-            "很高兴再次见到您，英雪！让我们开始工作吧！",
-            "您的创意空间已就绪，英雪！",
-            "准备好将想法变为现实了吗，英雪？",
-            "欢迎使用您的工作空间，英雪！",
-            "英雪，您的专属开发环境已启动！",
-            "让我们开始今天的创意之旅吧，英雪！",
-            "欢迎回来，英雪！一切准备就绪！",
-            "您的个人工作空间已加载完成，英雪！",
-            "英雪，今天有什么新创意要探索吗？"
+            "欢迎回来，小颖！准备开始创造吧！",
+            "很高兴再次见到您，小颖！让我们开始工作吧！",
+            "您的创意空间已就绪，小颖！",
+            "准备好将想法变为现实了吗，小颖？",
+            "欢迎使用您的工作空间，小颖！",
+            "小颖，您的专属开发环境已启动！",
+            "让我们开始今天的创意之旅吧，小颖！",
+            "欢迎回来，小颖！一切准备就绪！",
+            "您的个人工作空间已加载完成，小颖！",
+            "小颖，今天有什么新创意要探索吗？"
         ];
-        
-        // 农历数据（简化版）
-        const lunarInfo = {
-            "2025-01-01": { lunar: "腊月初二", festival: "元旦" },
-            "2025-01-29": { lunar: "腊月三十", festival: "除夕" },
-            "2025-01-30": { lunar: "正月初一", festival: "春节" },
-            "2025-02-14": { lunar: "正月十七", festival: "情人节" },
-            "2025-03-08": { lunar: "二月初九", festival: "妇女节" },
-            "2025-05-01": { lunar: "四月初四", festival: "劳动节" },
-            "2025-06-01": { lunar: "五月初六", festival: "儿童节" },
-            "2025-09-10": { lunar: "七月十八", festival: "教师节" },
-            "2025-10-01": { lunar: "八月初十", festival: "国庆节" },
-            "2025-12-25": { lunar: "冬月初五", festival: "圣诞节" },
-            "2025-12-31": { lunar: "冬月十一", festival: "跨年夜" }
-        };
         
         // 随机选择欢迎词
         function getRandomWelcome() {
@@ -1364,10 +1080,6 @@
             setTimeout(() => {
                 welcomeScreen.classList.add('hidden');
                 mainContainer.classList.add('visible');
-                
-                // 启动时间和日历
-                startClock();
-                generateCalendar();
             }, 3000);
         }
         
@@ -1410,7 +1122,7 @@
                 'docker': 'https://www.docker.com',
                 'steam': 'https://store.steampowered.com',
                 'deepseek': 'https://www.deepseek.com',
-                'terminal': '#' // 终端应用通常是本地的
+                'terminal': 'cmd://' // 终端应用通常是本地的
             };
             
             // 实际应用中应打开对应链接
@@ -1435,58 +1147,29 @@
         // 初始背景设置
         updateBackground();
         
-        // 性能监控功能
-        // FPS计数器
-        let fps = 0;
-        let lastCalledTime;
-        let frameCount = 0;
-        let startTime = Date.now();
-        
-        function updateFPS() {
-            frameCount++;
-            const now = Date.now();
-            if (lastCalledTime) {
-                const delta = (now - lastCalledTime) / 1000;
-                fps = Math.floor(frameCount / delta);
-                frameCount = 0;
+        // 获取农历日期（使用API）
+        async function getLunarDate(year, month, day) {
+            try {
+                // 使用免费的农历API服务
+                const response = await fetch(`https://api.example.com/lunar?year=${year}&month=${month}&day=${day}`);
+                if (!response.ok) {
+                    throw new Error('农历API请求失败');
+                }
+                const data = await response.json();
+                return data.lunarDate; // API应返回类似"农历乙巳年 六月初三"的格式
+            } catch (error) {
+                console.error('获取农历日期失败:', error);
+                return '农历日期获取中...';
             }
-            lastCalledTime = now;
-            
-            document.getElementById('fpsCounter').textContent = fps;
-            const fpsBar = document.getElementById('fpsBar');
-            const fpsPercentage = Math.min(100, (fps / 60) * 100);
-            fpsBar.style.width = `${fpsPercentage}%`;
-            
-            requestAnimationFrame(updateFPS);
         }
         
-        // 模拟CPU和内存使用率
-        function updatePerformanceStats() {
-            // 模拟CPU使用率 (0-100%)
-            const cpuUsage = Math.min(100, Math.floor(Math.random() * 40) + 20);
-            document.getElementById('cpuUsage').textContent = `${cpuUsage}%`;
-            document.getElementById('cpuBar').style.width = `${cpuUsage}%`;
-            
-            // 模拟内存使用 (1024-3072 MB)
-            const memUsage = Math.floor(Math.random() * 2048) + 1024;
-            document.getElementById('memoryUsage').textContent = `${memUsage} MB`;
-            const memPercentage = Math.min(100, (memUsage / 4096) * 100);
-            document.getElementById('memBar').style.width = `${memPercentage}%`;
-            
-            // 每秒更新一次
-            setTimeout(updatePerformanceStats, 1000);
-        }
-        
-        // 时间和日历功能
-        let currentDate = new Date();
-        
-        // 实时时钟
+        // 实时时钟和日期显示
         function startClock() {
             updateClock();
             setInterval(updateClock, 1000);
         }
         
-        function updateClock() {
+        async function updateClock() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
@@ -1499,126 +1182,33 @@
             const dateStr = now.toLocaleDateString('zh-CN', options);
             document.getElementById('current-date').textContent = dateStr;
             
-            // 更新农历（简化）
-            const dateKey = now.toISOString().split('T')[0];
-            const lunarData = lunarInfo[dateKey] || { lunar: "未知" };
-            document.getElementById('lunar-date').textContent = `农历 ${lunarData.lunar}`;
-        }
-        
-        // 生成日历
-        function generateCalendar(date = currentDate) {
-            const calendarTitle = document.getElementById('calendar-title');
-            const calendarDays = document.getElementById('calendar-days');
-            
-            // 设置标题
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            calendarTitle.textContent = `${year}年${month + 1}月`;
-            
-            // 获取当月第一天和最后一天
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            
-            // 获取第一天是星期几（0为周日）
-            const firstDayOfWeek = firstDay.getDay();
-            
-            // 获取上个月最后一天
-            const prevMonthLastDay = new Date(year, month, 0).getDate();
-            
-            // 清空日历
-            calendarDays.innerHTML = '';
-            
-            // 添加上个月的日期
-            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day other-month';
-                day.textContent = prevMonthLastDay - i;
-                calendarDays.appendChild(day);
-            }
-            
-            // 添加当月日期
-            const today = new Date();
-            for (let i = 1; i <= lastDay.getDate(); i++) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day';
-                
-                // 检查是否是今天
-                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    day.classList.add('today');
-                }
-                
-                // 创建日期数字
-                const dayNum = document.createElement('div');
-                dayNum.textContent = i;
-                day.appendChild(dayNum);
-                
-                // 检查是否有事件
-                const dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
-                const lunarData = lunarInfo[dateKey];
-                
-                if (lunarData) {
-                    // 添加农历信息
-                    const lunarSpan = document.createElement('div');
-                    lunarSpan.className = 'lunar-date';
-                    lunarSpan.textContent = lunarData.lunar;
-                    day.appendChild(lunarSpan);
+            // 仅在需要时更新农历（每分钟更新一次）
+            if (now.getSeconds() === 0) {
+                const lunarDateElement = document.getElementById('lunar-date');
+                // 避免频繁请求API
+                if (!lunarDateElement.dataset.lastUpdated || 
+                    (now - new Date(lunarDateElement.dataset.lastUpdated)) > 60000) {
                     
-                    // 添加节日标签
-                    if (lunarData.festival) {
-                        const festivalSpan = document.createElement('div');
-                        festivalSpan.className = 'festival-tag';
-                        festivalSpan.textContent = lunarData.festival;
-                        day.appendChild(festivalSpan);
-                    }
+                    const lunarDate = await getLunarDate(
+                        now.getFullYear(), 
+                        now.getMonth() + 1, 
+                        now.getDate()
+                    );
                     
-                    // 添加事件标记
-                    day.classList.add('event');
+                    lunarDateElement.textContent = lunarDate;
+                    lunarDateElement.dataset.lastUpdated = new Date().toISOString();
                 }
-                
-                calendarDays.appendChild(day);
-            }
-            
-            // 添加下个月的日期
-            const totalCells = 42; // 6行*7列
-            const daysInMonth = lastDay.getDate();
-            const nextMonthDays = totalCells - firstDayOfWeek - daysInMonth;
-            
-            for (let i = 1; i <= nextMonthDays; i++) {
-                const day = document.createElement('div');
-                day.className = 'calendar-day other-month';
-                day.textContent = i;
-                calendarDays.appendChild(day);
             }
         }
         
-        // 日历导航
-        document.getElementById('prev-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            generateCalendar();
-        });
-        
-        document.getElementById('next-month').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            generateCalendar();
-        });
-        
-        document.getElementById('prev-year').addEventListener('click', () => {
-            currentDate.setFullYear(currentDate.getFullYear() - 1);
-            generateCalendar();
-        });
-        
-        document.getElementById('next-year').addEventListener('click', () => {
-            currentDate.setFullYear(currentDate.getFullYear() + 1);
-            generateCalendar();
-        });
-        
-        // 启动性能监控
-        updateFPS();
-        updatePerformanceStats();
+        // 终端自动滚动到底部
+        const terminal = document.querySelector('.terminal');
+        terminal.scrollTop = terminal.scrollHeight;
         
         // 页面加载完成后设置欢迎屏幕
         window.addEventListener('load', () => {
             setupWelcomeScreen();
+            startClock();
         });
     </script>
 </body>
